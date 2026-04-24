@@ -5,6 +5,7 @@
       <h3>Edit your Listings</h3>
       <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation"
         enctype="multipart/form-data">
+         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
         <div class="mb-3">
           <label for="title" class="form-label">Title</label>

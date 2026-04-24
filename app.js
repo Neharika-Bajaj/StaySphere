@@ -71,10 +71,11 @@ const sessionOptions = {
 
 };
 
+app.set("trust proxy", 1);
+
 app.use(session(sessionOptions));
 app.use(flash());
 
-app.set("trust proxy", 1);
 
 app.use(csurf());
 
