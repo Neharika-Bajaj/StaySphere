@@ -15,6 +15,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const csurf = require("csurf");
 
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
@@ -59,17 +60,28 @@ const sessionOptions = {
     store,
     secret: process.env.SECRET,
     resave: false,
-    saveUnlimited: true,
+    saveUninitialized: true,
     cookie: {
-        expires: Date.now() + 7 * 24 * 60 * 1000, // expires in one week
-        maxAge: 7 * 24 * 60 * 1000,
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
+        secure: true,
+        sameSite: "none"
     }
 
 };
 
 app.use(session(sessionOptions));
 app.use(flash());
+
+app.set("trust proxy", 1);
+
+app.use(csurf());
+
+app.use((req, res, next) => {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
