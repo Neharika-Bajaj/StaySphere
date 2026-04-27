@@ -30,7 +30,12 @@ module.exports.createListing = async (req, res, next) => {
 
     const query = newListing.location;
     const geoResponse = await axios.get(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${query}`
+      `https://nominatim.openstreetmap.org/search?format=json&q=${query}`,
+      {
+        headers: {
+          "User-Agent": "wanderlust-app"
+        }
+      }
     );
 
     if (!geoResponse.data || geoResponse.data.length === 0) {
@@ -64,6 +69,7 @@ module.exports.createListing = async (req, res, next) => {
     req.flash("success", "New Listing Created!");
     res.redirect("/listings");
   } catch (err) {
+    console.log("CREATE LISTING ERROR:", err.response?.status, err.message);
     next(err);
   }
 };
